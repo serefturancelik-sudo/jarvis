@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Kontrol Paneli</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        button { padding: 15px 25px; cursor: pointer; border: none; border-radius: 8px; background: #007bff; color: white; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        #durum { margin-top: 20px; color: #00ff00; }
+    </style>
+</head>
+<body>
+
+    <h1>Jarvis Kontrol Paneli</h1>
+    
+    <div class="control-grid">
+        <button onclick="gonder('notepad_ac')">Notepad'i Aç</button>
+        <button onclick="gonder('kamera_ac')">Kamerayı Başlat</button>
+        <button onclick="gonder('isik_yak')">Işığı Yak (ESP32)</button>
+        <button onclick="gonder('rapor_oku')">Excel Raporunu Oku</button>
+    </div>
+
+    <p id="durum"></p>
+
+    <script>
+        async function gonder(komut) {
+            document.getElementById('durum').innerText = "İşleniyor...";
+            try {
+                // Buradaki 8000 portu senin Python FastAPI sunucunun çalıştığı porttur
+                const response = await fetch(`http://127.0.0.1:8000/komut-calistir/${komut}`);
+                const data = await response.json();
+                document.getElementById('durum').innerText = "Sonuç: " + data.durum;
+            } catch (error) {
+                document.getElementById('durum').innerText = "Hata: Sunucuya ulaşılamadı!";
+            }
+        }
+    </script>
+</body>
+</html>
